@@ -4,12 +4,12 @@ const router = express.Router()
 const {
     createOrder,
     deleteOrder,
-    getAllOrders,
+    getOrders,
     updateOrder,
     getOrder,
 } = require('../controllers/orders')
 
-router.route('/').post(createOrder).get(getAllOrders)
+router.route('/').post(createOrder).get(getOrders)
 
 router.route('/:id').get(getOrder).delete(deleteOrder).patch(updateOrder)
 

@@ -23,6 +23,11 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Please provide password'],
     minlength: 6,
   },
+  role: {
+    type: String,
+    enum: ['ADMIN', 'USER'], 
+    default: 'USER',
+  }
 })
 
 // hashes a user’s password before it’s saved to the database and 

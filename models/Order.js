@@ -5,7 +5,7 @@ const OrderSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ['in process', 'completed', 'cancelled'],
-      default: 'pending',
+      default: 'in process',
     },
     createdBy: {
       type: mongoose.Types.ObjectId,

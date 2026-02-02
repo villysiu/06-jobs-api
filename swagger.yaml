@@ -80,7 +80,7 @@ paths:
       tags:
         - Orders
       summary: Get All Orders
-      operationId: GetAllOrders
+      operationId: getOrders
       parameters: []
       responses:
         '200':

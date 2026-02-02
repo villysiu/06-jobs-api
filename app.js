@@ -8,6 +8,10 @@ const connectDB = require('./db/connect');
 const authenticateUser = require('./middleware/authentication');
 
 const authRouter = require('./routes/auth');
+const menuitemRouter = require('./routes/menuitems');
+const milkRouter = require('./routes/milks');
+const sizeRouter = require('./routes/sizes');
+const categoryRouter = require('./routes/categories');
 const ordersRouter = require('./routes/orders');
 
 
@@ -23,6 +27,10 @@ app.get('/', (req, res) => {
   res.send('Tea api');
 });
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/menuitems', menuitemRouter)
+app.use('/api/v1/milks', milkRouter)
+app.use('/api/v1/sizes', sizeRouter)
+app.use('/api/v1/categories', categoryRouter)
 app.use('/api/v1/orders', authenticateUser, ordersRouter)
 
 app.use(notFoundMiddleware);

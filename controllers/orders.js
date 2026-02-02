@@ -2,7 +2,7 @@ const Order = require('../models/Order')
 const { StatusCodes } = require('http-status-codes')
 const { BadRequestError, NotFoundError } = require('../errors')
 
-const getAllOrders = async (req, res) => {
+const getOrders = async (req, res) => {
   console.log('see all orders')
   const orders = await Order.find({ createdBy: req.user.userId }).sort('createdAt')
   res.status(StatusCodes.OK).json({ orders, count: orders.length })
@@ -70,7 +70,7 @@ const deleteOrder = async (req, res) => {
 module.exports = {
   createOrder,
   deleteOrder,
-  getAllOrders,
+  getOrders,
   updateOrder,
   getOrder,
 }
