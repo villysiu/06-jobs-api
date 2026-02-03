@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const MenuItemSchema = new mongoose.Schema(
+const MenuitemSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -38,14 +38,14 @@ const MenuItemSchema = new mongoose.Schema(
 
     temperature: {
       type: String,
-      enum: ['FREE', 'HOT', 'COLD'], 
-      default: 'FREE', // no choice, ie lemonade
+      enum: ['NA', 'HOT', 'ICED'], 
+      default: 'NA', // no choice, ie lemonade
     },
 
     sugar: {
       type: String,
-      enum: ['FREE', '0%', '25%', '50%','75%', '100%'], 
-      default: '0%',
+      enum: ['NA', '0%', '25%', '50%','75%', '100%'], 
+      default: 'NA',
     },
   },
   {
@@ -53,4 +53,4 @@ const MenuItemSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model('MenuItem', MenuItemSchema);
+module.exports = mongoose.model('Menuitem', MenuitemSchema);

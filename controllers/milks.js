@@ -20,7 +20,6 @@ const getMilk = async (req, res) => {
 }
 
 const createMilk = async (req, res) => {
-  console.log(req.body)
   // title and price
   const milk = await Milk.create(req.body)
   res.status(StatusCodes.CREATED).json({ milk })

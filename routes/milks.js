@@ -9,8 +9,17 @@ const {
     getMilk,
 } = require('../controllers/milks')
 
-router.route('/').post(createMilk).get(getMilks)
+const authenticateUser = require('../middleware/authentication');
+const isAdmin = require('../middleware/authorization')
 
-router.route('/:id').get(getMilk).delete(deleteMilk).patch(updateMilk)
+//public 
+router.get("/", getMilks);
+router.get("/:id", getMilk);
+
+// admin
+router.post("/", authenticateUser, isAdmin, createMilk);
+router.patch("/:id", authenticateUser, isAdmin, updateMilk);
+router.delete("/:id", authenticateUser, isAdmin, deleteMilk);
+
 
 module.exports = router

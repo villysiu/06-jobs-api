@@ -20,7 +20,6 @@ const getSize = async (req, res) => {
 }
 
 const createSize = async (req, res) => {
-  console.log(req.body)
   // title and price
   const size = await Size.create(req.body)
   res.status(StatusCodes.CREATED).json({ size })

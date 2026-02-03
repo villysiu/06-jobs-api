@@ -31,7 +31,7 @@ const createMenuitem = async (req, res) => {
 
   let milk = null
   if(milkId){
-    milk = await Milk.findBy(milkId)
+    milk = await Milk.findById(milkId)
     if(!milk)
         throw new NotFoundError('Milk not found')
   }
@@ -70,7 +70,6 @@ const updateMenuitem = async (req, res) => {
                 menuitem[key] = value
                 break
 
-            case 'description':
             case 'imageUrl':
             case 'active':
                 menuitem[key] = value
@@ -130,8 +129,16 @@ const getMenuitems = async (req, res) => {
     filter.category = category;
 
   const menuitems = await Menuitem.find(filter)
-    .populate('category')
-    .populate('milk');
+    // .populate('category')
+    // .populate('milk');
+    .populate({
+    path: 'category',
+    select: 'title -_id,'
+  })
+  .populate({
+    path: 'milk',
+    select: 'title price -_id,'
+  });
 
   res.status(StatusCodes.OK).json({
     menuitems,

@@ -9,8 +9,16 @@ const {
     getSize,
 } = require('../controllers/sizes')
 
-router.route('/').post(createSize).get(getSizes)
+const authenticateUser = require('../middleware/authentication');
+const isAdmin = require('../middleware/authorization')
 
-router.route('/:id').get(getSize).delete(deleteSize).patch(updateSize)
+//public 
+router.get("/", getSizes);
+router.get("/:id", getSize);
+
+// admin
+router.post("/", authenticateUser, isAdmin, createSize);
+router.patch("/:id", authenticateUser, isAdmin, updateSize);
+router.delete("/:id", authenticateUser, isAdmin, deleteSize);
 
 module.exports = router
