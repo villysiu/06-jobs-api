@@ -132,13 +132,13 @@ const getMenuitems = async (req, res) => {
     // .populate('category')
     // .populate('milk');
     .populate({
-    path: 'category',
-    select: 'title -_id,'
-  })
-  .populate({
-    path: 'milk',
-    select: 'title price -_id,'
-  });
+      path: 'category',
+      select: 'title -_id,'
+    })
+    .populate({
+      path: 'milk',
+      select: 'title price -_id,'
+    });
 
   res.status(StatusCodes.OK).json({
     menuitems,
@@ -153,8 +153,14 @@ const getMenuitem = async (req, res) => {
 
 
   const menuitem = await Menuitem.findById(id)
-    .populate('category')
-    .populate('milk')
+    .populate({
+      path: 'category',
+      select: 'title -_id,'
+    })
+    .populate({
+      path: 'milk',
+      select: 'title price -_id,'
+    });
 
   if (!menuitem) {
     throw new NotFoundError('Menuitem not found')
