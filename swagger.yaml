@@ -5,15 +5,16 @@ info:
   version: '1.0'
 servers:
   - url: https://zero6-jobs-api-lclz.onrender.com/api/v1
+  - url: http://localhost:3000/api/v1
     variables: {}
 paths:
   /auth/register:
     post:
       tags:
         - Auth
-      summary: Register User
+      security: []
+      summary: Register a user
       operationId: RegisterUser
-      parameters: []
       requestBody:
         description: ''
         content:
@@ -26,18 +27,25 @@ paths:
               password: 123456
         required: true
       responses:
-        '200':
-          description: ''
-          headers: {}
+        '201':
+          description: 'User created'
+          content:
+            application/json:
+              example: 
+                user: 
+                  name: John Doe
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '400':
+          description: Bad request (validation error)        
       deprecated: false
-      security: []
+
   /auth/login:
     post:
       tags:
         - Auth
+      security: []
       summary: Login User
       operationId: LoginUser
-      parameters: []
       requestBody:
         description: ''
         content:
@@ -50,21 +58,33 @@ paths:
         required: true
       responses:
         '200':
-          description: ''
-          headers: {}
+          description: Login successful
+          content:
+            application/json:
+              example: 
+                user: 
+                  name: John Doe
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '400':
+          description: Bad request (validation error)      
       deprecated: false
-      security: []
+      # security: []
 
   /categories:
     post:
       tags:
         - Categories
       summary: Create Category
+      description: |
+        Requires authentication.
+        Admin (superadmin) role only.
+
+        Test credentials:
+        email: admin@gg.com
+        password: 123456
       operationId: CreateCategory
-      security:
-        - BearerAuth: []
       requestBody:
-        description: 'Requires authentication. Admin role only.'
+        description: ''
         content:
           application/json:
             schema:
@@ -73,7 +93,6 @@ paths:
               title: Green Tea
               description: Green Tea
               imageUrl: greentea.jpg
-
         required: true
       responses:
         '201':
@@ -88,12 +107,12 @@ paths:
         - Categories
       summary: Get All Categories
       operationId: getCategories
-      parameters: []
+      security: []
       responses:
         '200':
           description: ''
-          headers: {}
-      deprecated: false
+      
+      deprecated: false  
   /categories/{id}:
     parameters:
       - in: path
@@ -101,16 +120,16 @@ paths:
         schema:
           type: string
         required: true
-        description: The category ID
+        description: The category Id
     get:
       tags:
         - Categories
       summary: Get Single Category
       operationId: GetCategory
+      security: []
       responses:
         '200':
           description: ''
-          headers: {}
         '404':
           description: Category not found
       deprecated: false
@@ -119,10 +138,14 @@ paths:
       tags:
         - Categories
       summary: Update Category
+      description: |
+        Requires authentication.
+        Admin (superadmin) role only.
+
+        Test credentials:
+        email: admin@gg.com
+        password: 123456
       operationId: UpdateCategory
-      security:
-        - BearerAuth: []
-      parameters: []
       requestBody:
         description: ''
         content:
@@ -148,20 +171,476 @@ paths:
       tags:
         - Categories
       summary: Delete Category
+      description: |
+        Requires authentication.
+        Admin (superadmin) role only.
+
+        Test credentials:
+        email: admin@gg.com
+        password: 123456
       operationId: DeleteCategory
-      security:
-        - BearerAuth: []
-      parameters: []
       responses:
         '200':
-        description: Category deleted successfully
-      '401':
-        description: Unauthorized
-      '403':
-        description: Forbidden (not admin)
-      '404':
-        description: Category not found
+          description: Category deleted successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (not admin)
+        '404':
+          description: Category not found
       deprecated: false
+  /menuitems:
+    post:
+      tags:
+        - Menuitems
+      summary: Create Menuitem
+      description: |
+        Requires authentication.
+        Admin (superadmin) role only.
+
+        Test credentials:
+        email: admin@gg.com
+        password: 123456
+      operationId: CreateMenuitem
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMenuitemRequest'
+            example:
+              title: Chamomile
+              imageUrl: Chamomile.jpg
+              price: 5
+              milkId: "69813e1ab60cff3582533eda"
+              categoryId: "69812f9904c60c2db78d7a52"
+              temperature: "HOT"
+              sugar: "50%"
+        required: true
+      responses:
+        '201':
+          description: Menuitem created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  menuitem:
+                    $ref: '#/components/schemas/Menuitem'
+              example:
+                menuitem:
+                  _id: "698146dbfd04af387993d3ff"
+                  title: Chamomile
+                  imageUrl: Chamomile.jpg
+                  price: 5
+                  active: true
+                  temperature: "HOT"
+                  sugar: "0%"
+                  milk: "69813e1ab60cff3582533eda"
+                  category: "69812f9904c60c2db78d7a52"
+                  createdAt: "2026-02-03T00:52:43.505Z"
+                  updatedAt: "2026-02-03T00:52:43.505Z"
+
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (not admin)
+      deprecated: false
+    get:
+      tags:
+        - Menuitems
+      summary: Get All Menuitems
+      operationId: getMenuitems
+      security: []
+      responses:
+        '200':
+          description: Menuitems retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  menuitems:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Menuitem'
+                  count:
+                    type: integer
+              example:
+                menuitems:
+                  - _id: "698142befd04af387993d3e0"
+                    title: Chai
+                    imageUrl: chai.jpg
+                    price: 5
+                    active: true
+                    temperature: "HOT"
+                    sugar: "0%"
+                    milk: null
+                    category:
+                      title: Black Tea
+                    createdAt: "2026-02-03T00:35:10.187Z"
+                    updatedAt: "2026-02-03T00:35:10.187Z"
+                count: 8
+      deprecated: false  
+  /menuitems/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description:  menuitemId
+    get:
+      tags:
+        - Menuitems
+      summary: Get Single Menuitem
+      operationId: GetMenuitem
+      security: []
+      responses:
+        '200':
+          description: Menuitem retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  menuitem:
+                    $ref: '#/components/schemas/Menuitem'
+              example:
+                menuitem:
+                  _id: "698146dbfd04af387993d3ff"
+                  title: Chamomile
+                  imageUrl: Chamomile.jpg
+                  price: 5
+                  active: true
+                  temperature: "HOT"
+                  sugar: "0%"
+                  milk: null
+                  category: 
+                    title: Caffaine Free
+                  createdAt: "2026-02-03T00:52:43.505Z"
+                  updatedAt: "2026-02-03T00:52:43.505Z"
+        '404':
+          description: Menuitem not found
+      deprecated: false
+
+    patch:
+      tags:
+        - Menuitems
+      summary: Update Menuitem
+      description: |
+        Requires authentication.
+        Admin (superadmin) role only.
+
+        Test credentials:
+        email: admin@gg.com
+        password: 123456
+      operationId: UpdateMenuitem
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMenuitemRequest'
+            example:
+              title: Chamomile
+              imageUrl: Chamomile.jpg
+              price: 5
+              milkId: "69813e1ab60cff3582533eda"
+              categoryId: "69812f9904c60c2db78d7a52"
+              temperature: "HOT"
+              sugar: "50%"
+        required: true
+      responses:
+        '200':
+          description: Menuitem updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  menuitem:
+                    $ref: '#/components/schemas/Menuitem'
+              example:
+                menuitem:
+                  _id: "698146dbfd04af387993d3ff"
+                  title: Chamomile
+                  imageUrl: Chamomile.jpg
+                  price: 5
+                  active: true
+                  temperature: ICED
+                  sugar: "25%"
+                  milk: null
+                  category: "69812f9904c60c2db78d7a52"
+                  createdAt: "2026-02-03T00:52:43.505Z"
+                  updatedAt: "2026-02-03T00:52:43.505Z"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (not admin)
+        '404':
+          description: Menuitem not found
+      deprecated: false
+    delete:
+      tags:
+        - Menuitems
+      summary: Delete Menuitem
+      description: |
+        Requires authentication.
+        Admin (superadmin) role only.
+
+        Test credentials:
+        email: admin@gg.com
+        password: 123456
+      operationId: DeleteMenuitem
+      responses:
+        '200':
+          description: Menuitem deleted successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (not admin)
+        '404':
+          description: Menuitem not found
+      deprecated: false
+      
+  /milks:
+    post:
+      tags:
+        - Milks
+      summary: Create Milk
+      description: |
+        Requires authentication.
+        Admin (superadmin) role only.
+
+        Test credentials:
+        email: admin@gg.com
+        password: 123456
+      operationId: CreateMilk
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMilkRequest'
+            example:
+              title: Almond Milk
+              price: 2.0
+        required: true
+      responses:
+        '201':
+          description: Milk created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (not admin)
+      deprecated: false
+    get:
+      tags:
+        - Milks
+      summary: Get All Milks
+      operationId: getMilks
+      security: []
+      responses:
+        '200':
+          description: ''
+      
+      deprecated: false  
+  /milks/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The milk Id
+    get:
+      tags:
+        - Milks
+      summary: Get Single Milk
+      operationId: GetMilk
+      security: []
+      responses:
+        '200':
+          description: ''
+        '404':
+          description: Milk not found
+      deprecated: false
+
+    patch:
+      tags:
+        - Milks
+      summary: Update Milk
+      description: |
+        Requires authentication.
+        Admin (superadmin) role only.
+
+        Test credentials:
+        email: admin@gg.com
+        password: 123456
+      operationId: UpdateMilk
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMilkRequest'
+            example:
+              title: Almond Milk
+              price: 2.0
+        required: true
+      responses:
+        '200':
+          description: Milk updated
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (not admin)
+        '404':
+          description: Milk not found
+      deprecated: false
+    delete:
+      tags:
+        - Milks
+      summary: Delete Milk
+      description: |
+        Requires authentication.
+        Admin (superadmin) role only.
+
+        Test credentials:
+        email: admin@gg.com
+        password: 123456
+      operationId: DeleteMilk
+      responses:
+        '200':
+          description: Milk deleted successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (not admin)
+        '404':
+          description: Milk not found
+      deprecated: false
+  /sizes:
+    post:
+      tags:
+        - Sizes
+      summary: Create Size
+      description: |
+        Requires authentication.
+        Admin (superadmin) role only.
+
+        Test credentials:
+        email: admin@gg.com
+        password: 123456
+      operationId: CreateSize
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSizeRequest'
+            example:
+              title: Almond Size
+              price: 2.0
+        required: true
+      responses:
+        '201':
+          description: Size created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (not admin)
+      deprecated: false
+    get:
+      tags:
+        - Sizes
+      summary: Get All Sizes
+      operationId: getSizes
+      security: []
+      responses:
+        '200':
+          description: ''
+      
+      deprecated: false  
+  /sizes/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The size Id
+    get:
+      tags:
+        - Sizes
+      summary: Get Single Size
+      operationId: GetSize
+      security: []
+      responses:
+        '200':
+          description: ''
+        '404':
+          description: Size not found
+      deprecated: false
+
+    patch:
+      tags:
+        - Sizes
+      summary: Update Size
+      description: |
+        Requires authentication.
+        Admin (superadmin) role only.
+
+        Test credentials:
+        email: admin@gg.com
+        password: 123456
+      operationId: UpdateSize
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSizeRequest'
+            example:
+              title: Almond Size
+              price: 2.0
+        required: true
+      responses:
+        '200':
+          description: Size updated
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (not admin)
+        '404':
+          description: Size not found
+      deprecated: false
+    delete:
+      tags:
+        - Sizes
+      summary: Delete Size
+      description: |
+        Requires authentication.
+        Admin (superadmin) role only.
+
+        Test credentials:
+        email: admin@gg.com
+        password: 123456
+      operationId: DeleteSize
+      responses:
+        '200':
+          description: Size deleted successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (not admin)
+        '404':
+          description: Size not found
+      deprecated: false
+  
+security:
+  - httpBearer: []
 components:
   schemas:
     RegisterUserRequest:
@@ -206,14 +685,12 @@ components:
           type: string
         description:
           type: string
-        image_url:
+        imageUrl:
           type: string
       example:
         title: Black Tea
         description: Strong black tea
-        image_url: blacktea.jpg
-
-      
+        imageUrl: blacktea.jpg      
     UpdateCategoryRequest:
       title: UpdateCategoryRequest
       required:
@@ -224,19 +701,170 @@ components:
           type: string
         description:
           type: string
-        image_url:
+        imageUrl:
           type: string
       example:
         title: Black Tea
-        description: Strong black tea
-        image_url: blacktea.jpg
+        description: Black tea 
+        imageUrl: blacktea.jpg
+    CreateMenuitemRequest:
+      type: object
+      description: Create a menuitem. NA stands for no choice
+      properties:
+        title:
+          type: string
+        imageUrl:
+          type: string
+        price:
+          type: number
+          format: float
+        categoryId:
+          type: string
+        milkId:
+          nullable: true
+          type: string
+        temperature:
+          type: string
+          enum: [NA, HOT, ICED]
+        sugar:
+          type: string
+          enum: ['NA', '0%', '25%', '50%', '75%', '100%']
+      example: 
+        title: Chamomile
+        imageUrl: Chamomile.jpg
+        price: 5
+        categoryId: "69812f9904c60c2db78d7a52"
+        milkId: "69813e1ab60cff3582533eda"
+        temperature: "HOT"
+        sugar: "50%"
+    UpdateMenuitemRequest:
+      type: object
+      description: Updating a menuitem. NA stands for no choice
+      properties:
+        title:
+          type: string
+        imageUrl:
+          type: string
+        price:
+          type: number
+          format: float
+        categoryId:
+          type: string
+        milkId:
+          nullable: true
+          type: string
+        temperature:
+          type: string
+          enum: [NA, HOT, ICED]
+        sugar:
+          type: string
+          enum: ['NA', '0%', '25%', '50%', '75%', '100%']
+      example: 
+        title: Chamomile
+        imageUrl: Chamomile.jpg
+        price: 5
+        categoryId: "69812f9904c60c2db78d7a52"
+        milkId: "69813e1ab60cff3582533eda"
+        temperature: "HOT"
+        sugar: "50%"
+
+    Menuitem:
+      type: object
+      required:
+        - _id
+        - title
+        - category
+        - active
+        - price
+        - temperature
+        - sugar
+        - createdAt
+        - updatedAt
+      properties:
+        _id:
+          type: string
+          description: MongoDB ObjectId
+          example: "698146dbfd04af387993d3ff"
+
+        title:
+          type: string
+          description: Menuitem title
+          example: Chamomile
+
+        active:
+          type: boolean
+          description: Whether the menuitem is active
+          default: true
+          example: true
+
+        imageUrl:
+          type: string
+          description: Image URL or filename
+          example: Chamomile.jpg
+
+        price:
+          type: number
+          format: float
+          description: Menuitem price
+          default: 0
+          example: 5
+
+        category:
+          type: string
+          description: Category ID (ObjectId reference)
+          example: "69812f9904c60c2db78d7a52"
+
+        milk:
+          nullable: true
+          description: Milk option (ObjectId reference or null)
+          oneOf:
+            - type: string
+              example: "69813e1ab60cff3582533eda"
+            - type: 'null'
+
+        temperature:
+          type: string
+          description: Drink temperature
+          enum: [NA, HOT, ICED]
+          default: NA
+          example: HOT
+
+        sugar:
+          type: string
+          description: Sugar level
+          enum: ['NA', '0%', '25%', '50%', '75%', '100%']
+          default: NA
+          example: "50%"
+
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+          example: "2026-02-03T00:52:43.505Z"
+
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          example: "2026-02-03T00:52:43.505Z"
+
   securitySchemes:
     httpBearer:
       type: http
       scheme: bearer
+      bearerFormat: JWT
+
 
 tags:
   - name: Auth
     description: ''
-  - name: Order
+  - name: Categories
+    description: ''
+  - name: Menuitems
+    description: ''
+  - name: Milks
+    description: ''
+  - name: Sizes
+    description: ''
+  - name: Carts
     description: ''
