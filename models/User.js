@@ -23,6 +23,11 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Please provide password'],
     minlength: 6,
   },
+  role: {
+    type: String,
+    enum: ['ADMIN', 'USER'], 
+    default: 'USER',
+  }
 })
 
 // hashes a user’s password before it’s saved to the database and 
@@ -33,7 +38,7 @@ UserSchema.pre('save', async function () {
 
 UserSchema.methods.createJWT = function () {
   return jwt.sign(
-    { userId: this._id, name: this.name },
+    { userId: this._id, name: this.name, role: this.role },
     process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_LIFETIME,
