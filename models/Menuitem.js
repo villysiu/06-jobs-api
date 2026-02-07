@@ -39,14 +39,14 @@ const MenuitemSchema = new mongoose.Schema(
     temperature: {
       type: String,
       enum: ['NA', 'HOT', 'ICED'], 
-      default: 'NA', // no choice, ie lemonade
+      default: 'HOT', // no choice, ie lemonade
       required: [true, 'Temperature is required'],
     },
 
     sugar: {
       type: String,
       enum: ['NA', '0%', '25%', '50%','75%', '100%'], 
-      default: 'NA',
+      default: '0%',
       required: [true, 'Sugar is required'],
     },
 
