@@ -51,7 +51,7 @@ const deleteMilk = async (req, res) => {
   if (!milk) {
     throw new NotFoundError(`No milk with id ${milkId}`)
   }
-  res.status(StatusCodes.OK).send()
+  res.status(StatusCodes.OK).json({ message: "The entry was deleted." });
 }
 
 module.exports = {

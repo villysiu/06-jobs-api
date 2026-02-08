@@ -51,7 +51,7 @@ const deleteSize = async (req, res) => {
   if (!size) {
     throw new NotFoundError(`No size with id ${sizeId}`)
   }
-  res.status(StatusCodes.OK).send()
+  res.status(StatusCodes.OK).json({ message: "The entry was deleted." });
 }
 
 module.exports = {
