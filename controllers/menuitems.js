@@ -184,7 +184,7 @@ const deleteMenuitem = async (req, res) => {
     throw new NotFoundError('Menuitem not found')
   }
 
-  res.status(StatusCodes.OK).json({ msg: 'Menu item deleted' })
+  res.status(StatusCodes.OK).json({ message: 'Menu item deleted' })
 }
 
 

@@ -64,7 +64,7 @@ const deleteOrder = async (req, res) => {
   if (!order) {
     throw new NotFoundError(`No order with id ${orderId}`)
   }
-  res.status(StatusCodes.OK).send()
+  res.status(StatusCodes.OK).json({ message: "The entry was deleted." });
 }
 
 module.exports = {

@@ -140,7 +140,7 @@ const deleteCart = async (req, res) => {
   if (!cart) {
     throw new NotFoundError(`No cart with id ${cartId}`)
   }
-  res.status(StatusCodes.OK).send()
+  res.status(StatusCodes.OK).json({ message: "The entry was deleted." });
 }
 
 module.exports = {

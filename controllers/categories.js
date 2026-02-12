@@ -50,7 +50,7 @@ const deleteCategory = async (req, res) => {
   if (!category) {
     throw new NotFoundError(`No category with id ${categoryId}`)
   }
-  res.status(StatusCodes.OK).send()
+  res.status(StatusCodes.OK).json({ message: "The entry was deleted." });
 }
 
 module.exports = {
