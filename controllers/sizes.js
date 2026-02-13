@@ -39,7 +39,7 @@ const updateSize = async (req, res) => {
     { new: true, runValidators: true }
   )
   if (!size) {
-    throw new NotFoundError(`No Size with id ${SizeId}`)
+    throw new NotFoundError(`No Size with id ${sizeId}`)
   }
   res.status(StatusCodes.OK).json({ size })
 }
@@ -47,7 +47,7 @@ const updateSize = async (req, res) => {
 const deleteSize = async (req, res) => {
   const { id: sizeId } = req.params;
 
-  const size = await Size.findByIdAndRemove(sizeId)
+  const size = await Size.findByIdAndDelete(sizeId)
   if (!size) {
     throw new NotFoundError(`No size with id ${sizeId}`)
   }

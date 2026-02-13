@@ -136,7 +136,7 @@ const updateCart = async (req, res) => {
 const deleteCart = async (req, res) => {
   const { id: cartId } = req.params;
 
-  const cart = await Cart.findByIdAndRemove(cartId)
+  const cart = await Cart.findByIdAndDelete(cartId)
   if (!cart) {
     throw new NotFoundError(`No cart with id ${cartId}`)
   }

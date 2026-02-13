@@ -117,7 +117,7 @@ const updateMenuitem = async (req, res) => {
   if(imageUrl !== undefined) 
     menuitem.imageUrl = imageUrl
 
-  if(price !== undefined && isNaN(price))
+  if(price !== undefined && !isNaN(price))
     menuitem.price = price
   if(active !== undefined) 
     menuitem.active = active
