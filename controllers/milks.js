@@ -11,7 +11,7 @@ const getMilks = async (req, res) => {
 const getMilk = async (req, res) => {
   const {id: milkId} = req.params
 
-  const milk = await Milk.findOne(milkId)
+  const milk = await Milk.findById(milkId)
 
   if (!milk) {
     throw new NotFoundError(`No milk with id ${milkId}`)
@@ -39,7 +39,7 @@ const updateMilk = async (req, res) => {
     { new: true, runValidators: true }
   )
   if (!milk) {
-    throw new NotFoundError(`No Milk with id ${MilkId}`)
+    throw new NotFoundError(`No Milk with id ${milkId}`)
   }
   res.status(StatusCodes.OK).json({ milk })
 }
@@ -47,7 +47,7 @@ const updateMilk = async (req, res) => {
 const deleteMilk = async (req, res) => {
   const { id: milkId } = req.params;
 
-  const milk = await Milk.findByIdAndRemove(milkId)
+  const milk = await Milk.findByIdAndDelete(milkId)
   if (!milk) {
     throw new NotFoundError(`No milk with id ${milkId}`)
   }

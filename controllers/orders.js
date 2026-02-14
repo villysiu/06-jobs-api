@@ -57,7 +57,7 @@ const deleteOrder = async (req, res) => {
     params: { id: orderId },
   } = req
 
-  const order = await Order.findByIdAndRemove({
+  const order = await Order.findByIdAndDelete({
     _id: orderId,
     createdBy: userId,
   })
